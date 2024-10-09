@@ -13,4 +13,4 @@ Testing Cl workflow - IntelliJ
 
 [![Releases](https://img.shields.io/github/release/ismail5626/sem/all.svg?style=flat-square)](https://github.com/<github-username>/sem/releases)
 
-https://img.shields.io/github/actions/workflow/status/ismail5626/iaaa/main.yml
+![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/Ismail5626/iaaa/main.yml?branch=develop)
