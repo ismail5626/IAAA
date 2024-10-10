@@ -30,7 +30,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.napier.sem.App</mainClass>
+                            <mainClass>com.napier.iaaa.App</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
