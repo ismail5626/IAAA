@@ -19,7 +19,7 @@ public class App
         }
 
         // Open a connection
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://db:3306/test", "root", "root");
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://db:3306/world", "root", "root");
              Statement stmt = conn.createStatement();
         ) {
 
