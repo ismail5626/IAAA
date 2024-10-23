@@ -1,6 +1,5 @@
 package com.napier.iaaa;
 
-
 import java.sql.*;
 
 public class App {
@@ -20,63 +19,73 @@ public class App {
         System.out.println("Generating reports...\n");
 
         // Report 1: All countries by population
-        app.getAllCountriesByPopulation(); // Generate and print report
+        System.out.println(app.getAllCountriesByPopulation()); // Generate and print report
         System.out.println(); // Add spacing between reports
 
         // Report 2: Countries in a specific continent (e.g., Asia)
-        app.getCountriesByContinent("Asia"); // Generate and print report
+        System.out.println(app.getCountriesByContinent("Asia")); // Generate and print report
         System.out.println(); // Add spacing between reports
 
         // Report 3: Countries in a specific region (e.g., Europe)
-        app.getCountriesByRegion("Europe"); // Generate and print report
+        System.out.println(app.getCountriesByRegion("Europe")); // Generate and print report
         System.out.println(); // Add spacing between reports
 
         // Report 4: Top N populated countries globally
-        app.getTopNPopulatedCountries(5); // Generate and print report
+        System.out.println(app.getTopNPopulatedCountries(5)); // Generate and print report
         System.out.println(); // Add spacing between reports
 
         // Report 5: Top N populated countries in a specific continent (e.g., Asia)
-        app.getTopNPopulatedCountriesInContinent("Asia", 5); // Generate and print report
+        System.out.println(app.getTopNPopulatedCountriesInContinent("Asia", 5)); // Generate and print report
         System.out.println(); // Add spacing after the last report
     }
 
     // Method to get all countries by population
-    public void getAllCountriesByPopulation() {
-        System.out.println("=== All Countries by Population ==="); // Section header
-        String query = "SELECT Name, Population FROM country ORDER BY Population DESC"; // SQL query
-        executeQuery(query); // Execute query with no parameters
+    public String getAllCountriesByPopulation() {
+        StringBuilder report = new StringBuilder();
+        report.append("=== All Countries by Population ===\n");
+        String query = "SELECT Name, Population FROM country ORDER BY Population DESC";
+        executeQuery(query, report); // Execute query with no parameters
+        return report.toString();
     }
 
     // Method to get countries by continent
-    public void getCountriesByContinent(String continent) {
-        System.out.println("=== Countries in Continent: " + continent + " ==="); // Section header
-        String query = "SELECT Name, Population FROM country WHERE Continent = ? ORDER BY Population DESC"; // SQL query
-        executeQuery(query, continent); // Execute query with continent parameter
+    public String getCountriesByContinent(String continent) {
+        StringBuilder report = new StringBuilder();
+        report.append("=== Countries in Continent: ").append(continent).append(" ===\n");
+        String query = "SELECT Name, Population FROM country WHERE Continent = ? ORDER BY Population DESC";
+        executeQuery(query, report, continent); // Execute query with continent parameter
+        return report.toString();
     }
 
     // Method to get countries by region
-    public void getCountriesByRegion(String region) {
-        System.out.println("=== Countries in Region: " + region + " ==="); // Section header
-        String query = "SELECT Name, Population FROM country WHERE Region = ? ORDER BY Population DESC"; // SQL query
-        executeQuery(query, region); // Execute query with region parameter
+    public String getCountriesByRegion(String region) {
+        StringBuilder report = new StringBuilder();
+        report.append("=== Countries in Region: ").append(region).append(" ===\n");
+        String query = "SELECT Name, Population FROM country WHERE Region = ? ORDER BY Population DESC";
+        executeQuery(query, report, region); // Execute query with region parameter
+        return report.toString();
     }
 
     // Method to get top N populated countries
-    public void getTopNPopulatedCountries(int N) {
-        System.out.println("=== Top " + N + " Populated Countries ==="); // Section header
-        String query = "SELECT Name, Population FROM country ORDER BY Population DESC LIMIT " + N; // SQL query with limit
-        executeQuery(query); // Execute query without parameters
+    public String getTopNPopulatedCountries(int N) {
+        StringBuilder report = new StringBuilder();
+        report.append("=== Top ").append(N).append(" Populated Countries ===\n");
+        String query = "SELECT Name, Population FROM country ORDER BY Population DESC LIMIT " + N;
+        executeQuery(query, report); // Execute query without parameters
+        return report.toString();
     }
 
     // Method to get top N populated countries in a continent
-    public void getTopNPopulatedCountriesInContinent(String continent, int N) {
-        System.out.println("=== Top " + N + " Populated Countries in Continent: " + continent + " ==="); // Section header
-        String query = "SELECT Name, Population FROM country WHERE Continent = ? ORDER BY Population DESC LIMIT " + N; // SQL query with parameters
-        executeQuery(query, continent); // Execute query with continent parameter
+    public String getTopNPopulatedCountriesInContinent(String continent, int N) {
+        StringBuilder report = new StringBuilder();
+        report.append("=== Top ").append(N).append(" Populated Countries in Continent: ").append(continent).append(" ===\n");
+        String query = "SELECT Name, Population FROM country WHERE Continent = ? ORDER BY Population DESC LIMIT " + N;
+        executeQuery(query, report, continent); // Execute query with continent parameter
+        return report.toString();
     }
 
     // Private method to execute SQL queries
-    private void executeQuery(String query, String... params) {
+    private void executeQuery(String query, StringBuilder report, String... params) {
         try {
             // Load the MySQL JDBC driver
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -85,7 +94,7 @@ public class App {
             return; // Exit method if driver fails to load
         }
 
-        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASSWORD); // Establish connection
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
              PreparedStatement pstmt = conn.prepareStatement(query)) { // Prepare SQL statement
 
             // Set parameters for prepared statement if any
@@ -98,8 +107,8 @@ public class App {
             // Execute the query and retrieve results
             ResultSet rs = pstmt.executeQuery(); // Execute the query
             while (rs.next()) { // Iterate through the result set
-                // Print country name and population
-                System.out.printf("%s: %d%n", rs.getString(1), rs.getInt(2));
+                // Append country name and population to report
+                report.append(String.format("%s: %d%n", rs.getString(1), rs.getInt(2)));
             }
 
         } catch (SQLException e) {
