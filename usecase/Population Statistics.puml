@@ -5,14 +5,45 @@ actor DA as "Data Analyst"
 rectangle Database
 
 rectangle "Data Analysis System" {
-    usecase UC4 as "Get population
-    in cities + out of cities"
 
-    usecase UCa as "Print populations"
+    usecase UC1 as "Get population
+    Statistics Report"
 
-    HR - UC4
-    UC4 ..> UCa : include
-    UC4 - Database
+    usecase UC2 as "Get City Stat
+    Reports"
+
+    usecase UC3 as "Get Countrie Stat
+    Reports"
+
+    usecase UC4 as "Get Region Stat
+    Reports"
+
+    usecase UC5 as "Get Language Speaker
+    Stat Reports"
+
+
+
+    usecase UCa as "Print Reports"
+
+    DA - UC1
+        UC1 ..> UCa : include
+        UC1 - Database
+
+    DA - UC2
+        UC2 ..> UCa : include
+        UC2 - Database
+
+    DA - UC3
+        UC3 ..> UCa : include
+        UC3 - Database
+
+    DA - UC4
+         UC4 ..> UCa : include
+         UC4 - Database
+
+    DA - UC5
+    UC5 ..> UCa : include
+    UC5 - Database
 }
 
 @enduml
