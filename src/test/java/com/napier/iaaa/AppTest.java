@@ -3,9 +3,6 @@ package com.napier.iaaa;
 // Import necessary JUnit classes for testing
 import org.junit.jupiter.api.BeforeAll; // Annotation for a method that runs before all tests
 import org.junit.jupiter.api.Test; // Annotation to indicate a test method
-import org.junit.jupiter.api.TestInstance; // Annotation to configure the test instance lifecycle
-
-import static org.junit.jupiter.api.Assertions.*; // Import assertions for testing
 
 // Class declaration for AppTest, which contains unit tests for the App class
 public class AppTest

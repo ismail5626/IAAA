@@ -13,25 +13,25 @@ public class App {
 
     // Method to get and print table names from the database
     public void printTableNames() {
+        // Load Database driver
         try {
-            // Load Database driver
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            System.out.println("Could not load SQL driver");
+            System.err.println("Could not load SQL driver: " + e.getMessage());
             return; // Exit method if driver fails to load
         }
 
         // Open a connection
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://db:3306/world", "root", "root");
-             Statement stmt = conn.createStatement()) {
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(QUERY1)) {
 
-            ResultSet rs = stmt.executeQuery(QUERY1);
             // Extract data from result set and print table names
             while (rs.next()) {
                 System.out.println(rs.getString(1));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("SQL Exception: " + e.getMessage());
         }
     }
 }
