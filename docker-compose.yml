@@ -1,0 +1,11 @@
+version: '3'
+services:
+  db:
+    image: mysql:latest  # Pull the latest MySQL image from Docker Hub
+    environment:
+      MYSQL_ROOT_PASSWORD: example  # Set root password for MySQL
+      MYSQL_DATABASE: world  # This is the name of your database
+    volumes:
+      - ./db_data:/var/lib/mysql  # Persist the MySQL data
+    ports:
+      - "3306:3306"  # Expose MySQL on port 3306

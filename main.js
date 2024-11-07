@@ -12,6 +12,8 @@ const {
     getLanguageStatistics
 } = require('./queries');
 
+const pool = require('./db'); // Import the pool to close on exit
+
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -147,8 +149,11 @@ const handleMenuSelection = (choice) => {
             break;
         case '11':
             console.log('Exiting...');
-            rl.close();
-            process.exit(0);
+            pool.end((err) => {
+                if (err) console.error('Error closing the connection pool:', err);
+                rl.close();
+                process.exit(0);
+            });
             break;
         default:
             console.log('Invalid option. Please try again.');
@@ -159,20 +164,15 @@ const handleMenuSelection = (choice) => {
 // Function to format results for better display
 const formatResults = (results) => {
     return results.map(result => {
-        // Check if it's a city result
         if ('City' in result && 'Population' in result) {
-            return `${result.City} (${result.Code || 'N/A'}) - ${result.Population} people`;
-        }
-        // Check if it's a language result
-        else if ('Language' in result && 'Speakers' in result) {
+            return `${result.City} (${result.Code || ''}) - ${result.Population} people`;
+        } else if ('Language' in result && 'Speakers' in result) {
             return `${result.Language} - ${result.Speakers} speakers`;
+        } else if ('Name' in result && 'Population' in result) {
+            return `${result.Name} (${result.Code || ''}) - ${result.Population} people`;
+        } else {
+            return 'Unresolved data format';
         }
-        // Default case (countries or similar)
-        else if ('Name' in result && 'Population' in result) {
-            return `${result.Name} (${result.Code || 'N/A'}) - ${result.Population} people`;
-        }
-        // In case of no matching fields, return empty
-        return 'Unresolved data format';
     }).join('\n');
 };
 

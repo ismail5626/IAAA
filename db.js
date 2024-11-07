@@ -1,22 +1,20 @@
 const mysql = require('mysql2');
 
-// Set up the MySQL connection
-const connection = mysql.createConnection({
+// Set up the MySQL connection pool
+const pool = mysql.createPool({
     host: 'localhost',    // Use 'localhost' if MySQL is running locally
     user: 'root',         // Your MySQL root username
     password: 'example',  // Your MySQL root password
     database: 'world',    // Name of the database you're working with
-    port: 3306            // Default MySQL port
+    port: 3306,           // Default MySQL port
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 });
 
-// Connect to the database
-connection.connect((err) => {
-    if (err) {
-        console.error('Error connecting to MySQL:', err.stack);
-        return;
-    }
-    console.log('Connected to MySQL as id ' + connection.threadId);
-});
+// Export the pool for use in other files
+module.exports = pool;
 
-// Export the connection for use in other files
-module.exports = connection;
+
+
+
