@@ -4,7 +4,7 @@ import java.sql.*;
 
 public class App {
     // Database connection details
-    static final String DB_URL = "jdbc:mysql://localhost:3306/world";
+    static final String DB_URL = "jdbc:mysql://db:3306/world";
     static final String USER = "root";
     static final String PASSWORD = "root";
 
