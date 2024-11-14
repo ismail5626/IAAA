@@ -3,10 +3,10 @@ package com.napier.iaaa;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class GetCitiesByRegionTest {
+public class GetCityByRegionTest {
 
     @Test
-    public void testGetCitiesByRegion() {
+    public void testGetCityByRegion() {
         App app = new App();
         String result = app.getCitiesByRegion("Middle East");
         assertNotNull(result);
@@ -14,7 +14,7 @@ public class GetCitiesByRegionTest {
     }
 
     @Test
-    public void testGetCitiesByRegionEmpty() {
+    public void testGetCityByRegionEmpty() {
         App app = new App();
         String result = app.getCitiesByRegion("");
         assertNotNull(result);
@@ -22,7 +22,7 @@ public class GetCitiesByRegionTest {
     }
 
     @Test
-    public void testGetCitiesByRegionNonExistent() {
+    public void testGetCityByRegionNonExistent() {
         App app = new App();
         String result = app.getCitiesByRegion("Narnia");
         assertNotNull(result);
@@ -32,7 +32,7 @@ public class GetCitiesByRegionTest {
     }
 
     @Test
-    public void testGetCitiesByRegionNull() {
+    public void testGetCityByRegionNull() {
         App app = new App();
         String result = app.getCitiesByRegion(null);
         assertNotNull(result);
