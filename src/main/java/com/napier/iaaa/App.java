@@ -4,13 +4,17 @@ import java.sql.*;
 
 public class App {
     // Database connection details
-    static final String DB_URL = "jdbc:mysql://db:3306/world";
-    static final String USER = "root";
-    static final String PASSWORD = "root";
+    static final String DB_URL = "jdbc:mysql://db:3306/world";  // Your database URL
+    static final String USER = "root";  // Your database username
+    static final String PASSWORD = "root";  // Your database password
+    static Connection con = null;  // Database connection object
 
     // Main method to run the application
     public static void main(String[] args) {
-        App app = new App(); // Create an instance of App
+        App app = new App();  // Create an instance of App
+
+        // Connect to the database before generating any reports
+        app.connect(DB_URL, 5000);  // Example delay of 5 seconds between retries
 
         // Print a welcoming message
         System.out.println("Welcome to the Country Reports Application!\n");
@@ -147,9 +151,84 @@ public class App {
         System.out.println(app.getLanguageSpeakersReport());
         System.out.println();
 
-
+        // Ensure that the connection is closed when the application ends
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            app.closeConnection();
+        }));
     }
 
+    // Method to establish a connection to the database
+    public void connect(String location, int delay) {
+        try {
+            // Load MySQL JDBC driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Could not load SQL driver");
+            System.exit(-1);  // Exit if the driver is not found
+        }
+
+        int retries = 10;
+        boolean shouldWait = false;
+
+        // Attempt to connect with retry mechanism
+        for (int i = 0; i < retries; ++i) {
+            System.out.println("Connecting to database...");
+            try {
+                if (shouldWait) {
+                    // Wait a bit before retrying if needed
+                    Thread.sleep(delay);
+                }
+
+                // Connect to database
+                con = DriverManager.getConnection(location, USER, PASSWORD);
+                System.out.println("Successfully connected to the database.");
+                break;
+            } catch (SQLException sqle) {
+                System.out.println("Failed to connect to database (attempt " + (i + 1) + ")");
+                System.out.println(sqle.getMessage());
+
+                // Prepare to wait before next retry
+                shouldWait = true;
+            } catch (InterruptedException ie) {
+                System.out.println("Thread interrupted during sleep, unexpected behavior.");
+            }
+        }
+
+        if (con == null) {
+            System.out.println("Unable to connect to the database after " + retries + " attempts.");
+            System.exit(-1);  // Exit if connection is unsuccessful after retries
+        }
+    }
+
+    // Method to close the database connection
+    public void closeConnection() {
+        if (con != null) {
+            try {
+                con.close();
+                System.out.println("Database connection closed.");
+            } catch (SQLException e) {
+                System.out.println("Error closing database connection: " + e.getMessage());
+            }
+        }
+    }
+
+    // Method to execute the query and append results to the report
+    private void executeQuery(String query, StringBuilder report) {
+        try (Statement stmt = con.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            while (rs.next()) {
+                report.append("Code: ").append(rs.getString("Code"))
+                        .append(", Name: ").append(rs.getString("Name"))
+                        .append(", Continent: ").append(rs.getString("Continent"))
+                        .append(", Region: ").append(rs.getString("Region"))
+                        .append(", Population: ").append(rs.getLong("Population"))
+                        .append(", Capital: ").append(rs.getString("Capital"))
+                        .append("\n");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error executing query: " + e.getMessage());
+        }
+    }
 
 
        /*

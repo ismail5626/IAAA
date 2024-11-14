@@ -9,6 +9,7 @@
     <version>0.1.0.2</version>
 
     <dependencies>
+
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
