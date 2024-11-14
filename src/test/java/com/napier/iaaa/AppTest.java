@@ -8,5 +8,14 @@ public class AppTest {
     public void testApp() {
         assertEquals(1, 1, "Simple Test");
     }
+
+    @Test
+    public void testGetCitiesByRegion() {
+        App app = new App();
+        String result = app.getCitiesByRegion("Middle East");
+        assertNotNull(result);
+        assertTrue(result.contains("=== All Cities in Region: Middle East by Largest Population to Smallest ==="));
+    }
+
 }
 
