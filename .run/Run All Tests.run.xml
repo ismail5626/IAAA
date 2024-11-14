@@ -8,9 +8,9 @@
       </pattern>
     </extension>
     <option name="PACKAGE_NAME" value="com.napier.iaaa" />
-    <option name="MAIN_CLASS_NAME" value="com.napier.iaaa.AppTest" />
+    <option name="MAIN_CLASS_NAME" value="" />
     <option name="METHOD_NAME" value="" />
-    <option name="TEST_OBJECT" value="class" />
+    <option name="TEST_OBJECT" value="package" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
