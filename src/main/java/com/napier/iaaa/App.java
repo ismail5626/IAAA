@@ -4,7 +4,7 @@ import java.sql.*;
 
 public class App {
     // Database connection details
-    static final String DB_URL = "jdbc:mysql://db:3306/world";
+    static final String DB_URL = "jdbc:mysql://localhost:3306/world";
     static final String USER = "root";
     static final String PASSWORD = "root";
 
@@ -27,7 +27,7 @@ public class App {
         System.out.println(); // Add spacing between reports
 
         // Report 3: Countries in a specific region (e.g., Europe)
-        System.out.println(app.getCountriesByRegion("Europe")); // Generate and print report
+        System.out.println(app.getCountriesByRegion("Middle East")); // Generate and print report
         System.out.println(); // Add spacing between reports
 
         // Report 4: Top N populated countries globally
@@ -37,12 +37,16 @@ public class App {
         // Report 5: Top N populated countries in a specific continent (e.g., Asia)
         System.out.println(app.getTopNPopulatedCountriesInContinent("Asia", 5)); // Generate and print report
         System.out.println(); // Add spacing after the last report
+
+        //Report 5: Top N populated countries by specific reigion (e.g., Middle East)
+        System.out.println(app.getTopNPopulatedCountriesInRegion("Middle East", 5)); // Generate and print report
+        System.out.println(); // Add spacing after the last report
     }
 
     // Method to get all countries by population
     public String getAllCountriesByPopulation() {
         StringBuilder report = new StringBuilder();
-        report.append("=== All Countries by Population ===\n");
+        report.append("=== All Countries by Largest Population to Smallest ===\n");
         String query = "SELECT Name, Population FROM country ORDER BY Population DESC";
         executeQuery(query, report); // Execute query with no parameters
         return report.toString();
@@ -82,6 +86,17 @@ public class App {
         String query = "SELECT Name, Population FROM country WHERE Continent = ? ORDER BY Population DESC LIMIT " + N;
         executeQuery(query, report, continent); // Execute query with continent parameter
         return report.toString();
+
+    }
+
+    // Method to get countries by region
+    public String getTopNPopulatedCountriesInRegion(String continent, int N) {
+        StringBuilder report = new StringBuilder();
+        report.append("=== Top ").append(N).append(" Populated Countries in Region: ").append(continent).append(" ===\n");
+        String query = "SELECT Name, Population FROM country WHERE Region = ? ORDER BY Population DESC LIMIT " + N;
+        executeQuery(query, report, continent); // Execute query with continent parameter
+        return report.toString();
+
     }
 
     // Private method to execute SQL queries
