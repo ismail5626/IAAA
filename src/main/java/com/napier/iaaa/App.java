@@ -4,7 +4,7 @@ import java.sql.*;
 
 public class App {
     // Database connection details
-    static final String DB_URL = "jdbc:mysql://db:3306/world";  // Your database URL
+    static final String DB_URL = "jdbc:mysql://db:3306/world";  // Default database URL
     static final String USER = "root";  // Your database username
     static final String PASSWORD = "root";  // Your database password
     static Connection con = null;  // Database connection object
@@ -13,8 +13,14 @@ public class App {
     public static void main(String[] args) {
         App app = new App();  // Create an instance of App
 
-        // Connect to the database before generating any reports
-        app.connect(DB_URL, 5000);  // Example delay of 5 seconds between retries
+        // Connect to the database using command-line arguments (if provided)
+        if (args.length < 2) {
+            // Default connection and retry delay if no arguments are provided
+            app.connect(DB_URL, 5000);  // Example: Connect to the default DB with a 5-second delay between retries
+        } else {
+            // Use arguments for database connection and delay
+            app.connect(args[0], Integer.parseInt(args[1]));
+        }
 
         // Print a welcoming message
         System.out.println("Welcome to the Country Reports Application!\n");
@@ -193,6 +199,7 @@ public class App {
                 System.out.println("Thread interrupted during sleep, unexpected behavior.");
             }
         }
+
 
         if (con == null) {
             System.out.println("Unable to connect to the database after " + retries + " attempts.");
