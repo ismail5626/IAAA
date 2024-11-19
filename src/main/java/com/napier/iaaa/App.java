@@ -176,7 +176,9 @@ public class App {
         int retries = 10;
         boolean shouldWait = false;
 
-        // Attempt to connect with retry mechanism
+        /*
+        Attempts to connect with retry mechanism
+         */
         for (int i = 0; i < retries; ++i) {
             System.out.println("Connecting to database...");
             try {

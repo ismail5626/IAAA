@@ -38,7 +38,7 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.3.0</version>
                 <configuration>
-                    <finalName>seMethods</finalName>
+                    <finalName>iaaa</finalName>
                     <archive>
                         <manifest>
                             <mainClass>com.napier.iaaa.App</mainClass>
