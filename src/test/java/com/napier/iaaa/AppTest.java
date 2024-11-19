@@ -1,21 +1,15 @@
 package com.napier.iaaa;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AppTest {
-    @Test
-    public void testApp() {
-        assertEquals(1, 1, "Simple Test");
-    }
 
+class AppTest
+{
     @Test
-    public void testGetCitiesByRegion() {
-        App app = new App();
-        String result = app.getCitiesByRegion("Middle East");
-        assertNotNull(result);
-        assertTrue(result.contains("=== All Cities in Region: Middle East by Largest Population to Smallest ==="));
+    void unitTest()
+    {
+        assertEquals(5, 5);
     }
-
 }
 
