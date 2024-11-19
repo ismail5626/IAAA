@@ -629,7 +629,6 @@ public class App {
     */
 
     // Private method to execute SQL queries
-    // Inside App.java, inside the App class
 
     // Private method to execute SQL queries using the persistent connection
     private void executeQuery(String query, StringBuilder report, String... params) {
@@ -660,9 +659,4 @@ public class App {
     }
 }
 
-/*
-Method to close the database connection:
- */
-
-// Inside App.java, inside the App class
 
