@@ -9,6 +9,17 @@ public class App {
      */
     private Connection con;
 
+    // Method to close the database connection
+    public void closeConnection() {
+        if (con != null) {
+            try {
+                con.close();
+                System.out.println("Database connection closed.");
+            } catch (SQLException e) {
+                System.out.println("Error closing database connection: " + e.getMessage());
+            }
+        }
+    }
 
     // Method to establish a connection to the database with retries
     public void connect(String location, int delay) {
@@ -148,13 +159,13 @@ public class App {
         System.out.println(app.getTopNPopulatedCapitalCitiesInRegion("Polynesia", 5)); // Report 22: Top N populated capital cities in Polynesia
         System.out.println(); // Spacing between reports
 
-        System.out.println(app.getContinentPopulationReports("Australia")); // Report 23: Population report by continent (Australia)
+        System.out.println(app.getContinentPopulationReports()); // Report 23: Population report by continent (Australia)
         System.out.println(); // Spacing between reports
 
-        System.out.println(app.getRegionPopulationReports("Nordic Countries")); // Report 24: Population report by region (Nordic Countries)
+        System.out.println(app.getRegionPopulationReports()); // Report 24: Population report by region (Nordic Countries)
         System.out.println(); // Spacing between reports
 
-        System.out.println(app.getCountryPopulationReports("Afghanistan")); // Report 25: Population report by country (Afghanistan)
+        System.out.println(app.getCountryPopulationReports()); // Report 25: Population report by country (Afghanistan)
         System.out.println(); // Spacing between reports
 
         System.out.println(app.getWorldPopulation()); // Report 26: World population report
@@ -273,7 +284,7 @@ public class App {
         StringBuilder report = new StringBuilder();
         report.append("=== Cities in Continent: ").append(continent).append(" ===\n");
         String query = "SELECT city.Name, CountryCode, District, city.Population " +
-                "FROM City " +
+                "FROM city " +
                 "JOIN country ON city.CountryCode = country.code " +
                 "WHERE country.continent = ? " +
                 "ORDER BY city.Population DESC";
@@ -476,62 +487,50 @@ public class App {
 
     // Method to get a population report for a specific continent, including total population, population in cities,
 // population not in cities, and percentage of population in and outside cities
-    public String getContinentPopulationReports(String continent) {
-        StringBuilder report = new StringBuilder(); // Initialize report
-        report.append("=== Population Report for Continent: ").append(continent).append(" ===\n");
+    public String getContinentPopulationReports() {
+        StringBuilder report = new StringBuilder();
+        report.append("=== Population Report by Continent ===\n");
         String query = "SELECT country.Continent AS Continent, " +
                 "SUM(country.Population) AS TotalPopulation, " +
                 "SUM(city.Population) AS PopulationInCities, " +
-                "SUM(country.Population) - SUM(city.Population) AS PopulationNotInCities, " +
-                "ROUND(SUM(city.Population) / SUM(country.Population) * 100, 2) AS PercentageInCities, " +
-                "ROUND((SUM(country.Population) - SUM(city.Population)) / SUM(country.Population) * 100, 2) AS PercentageNotInCities " +
+                "SUM(country.Population) - SUM(city.Population) AS PopulationNotInCities " +
                 "FROM country " +
-                "JOIN city ON country.Code = city.CountryCode " +
-                "WHERE country.Continent = ? " +
+                "LEFT JOIN city ON country.Code = city.CountryCode " +
                 "GROUP BY country.Continent";
-        executeQuery(query, report, continent); // Execute query with continent parameter and build report
-        return report.toString(); // Return the generated report
+        executeQuery(query, report);
+        return report.toString();
     }
 
     // Method to get a population report for a specific region, including total population, population in cities,
 // population not in cities, and percentage of population in and outside cities
-    public String getRegionPopulationReports(String region) {
-        StringBuilder report = new StringBuilder(); // Initialize report
-        report.append("=== Population Report for Region: ").append(region).append(" ===\n");
+    public String getRegionPopulationReports() {
+        StringBuilder report = new StringBuilder();
+        report.append("=== Population Report by Region ===\n");
         String query = "SELECT country.Region AS Region, " +
                 "SUM(country.Population) AS TotalPopulation, " +
                 "SUM(city.Population) AS PopulationInCities, " +
-                "SUM(country.Population) - SUM(city.Population) AS PopulationNotInCities, " +
-                "ROUND(SUM(city.Population) / SUM(country.Population) * 100, 2) AS PercentageInCities, " +
-                "ROUND((SUM(country.Population) - SUM(city.Population)) / SUM(country.Population) * 100, 2) AS PercentageNotInCities " +
+                "SUM(country.Population) - SUM(city.Population) AS PopulationNotInCities " +
                 "FROM country " +
-                "JOIN city ON country.Code = city.CountryCode " +
-                "WHERE country.Region = ? " +
+                "LEFT JOIN city ON country.Code = city.CountryCode " +
                 "GROUP BY country.Region";
-        executeQuery(query, report, region); // Execute query with region parameter and build report
-        return report.toString(); // Return the generated report
+        executeQuery(query, report);
+        return report.toString();
     }
 
     // Method to get a population report for a specific country, including total population, population in cities,
 // population not in cities, and percentage of population in and outside cities
-    public String getCountryPopulationReports(String country) {
-        StringBuilder report = new StringBuilder(); // Initialize report
-        report.append("=== Population Report for Country: ").append(country).append(" ===\n");
+    public String getCountryPopulationReports() {
+        StringBuilder report = new StringBuilder();
+        report.append("=== Population Report by Country ===\n");
         String query = "SELECT country.Name AS Country, " +
-                "country.Population AS TotalPopulation, " +
-                "IFNULL(city.PopInCities, 0) AS PopulationInCities, " +
-                "country.Population - IFNULL(city.PopInCities, 0) AS PopulationNotInCities, " +
-                "ROUND(IFNULL(city.PopInCities, 0) / country.Population * 100, 2) AS PercentageInCities, " +
-                "ROUND((country.Population - IFNULL(city.PopInCities, 0)) / country.Population * 100, 2) AS PercentageNotInCities " +
+                "SUM(country.Population) AS TotalPopulation, " +
+                "IFNULL(SUM(city.Population), 0) AS PopulationInCities, " +
+                "SUM(country.Population) - IFNULL(SUM(city.Population), 0) AS PopulationNotInCities " +
                 "FROM country " +
-                "LEFT JOIN ( " +
-                "    SELECT CountryCode, SUM(Population) AS PopInCities " +
-                "    FROM city " +
-                "    GROUP BY CountryCode " +
-                ") AS city ON country.Code = city.CountryCode " +
-                "WHERE country.Name = ?";
-        executeQuery(query, report, country); // Execute query with country parameter and build report
-        return report.toString(); // Return the generated report
+                "LEFT JOIN city ON country.Code = city.CountryCode " +
+                "GROUP BY country.Name";
+        executeQuery(query, report);
+        return report.toString();
     }
 
     // Method to get the total world population
