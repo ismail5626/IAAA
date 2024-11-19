@@ -3,28 +3,12 @@ package com.napier.iaaa;
 import java.sql.*;
 
 public class App {
-    // Database connection details
-    static final String DB_URL = "jdbc:mysql://db:3306/world"; // URL to the database
-    static final String USER = "root"; // Database username
-    static final String PASSWORD = "root"; // Database password
-
 
     /*
     Declare the persistent connection variable
      */
     private Connection con;
 
-    // Method to close the database connection
-    public void closeConnection() {
-        if (con != null) {
-            try {
-                con.close();
-                System.out.println("Database connection closed.");
-            } catch (SQLException e) {
-                System.out.println("Error closing database connection: " + e.getMessage());
-            }
-        }
-    }
 
     // Method to establish a connection to the database with retries
     public void connect(String location, int delay) {
