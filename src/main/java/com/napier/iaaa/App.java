@@ -3,14 +3,77 @@ package com.napier.iaaa;
 import java.sql.*;
 
 public class App {
-    // Database connection details
-    static final String DB_URL = "jdbc:mysql://db:3306/world"; // URL to the database
-    static final String USER = "root"; // Database username
-    static final String PASSWORD = "root"; // Database password
 
-    // Main method to run the application
+    /*
+    Declare the persistent connection variable
+     */
+    private Connection con;
+
+
+    // Method to establish a connection to the database with retries
+    public void connect(String location, int delay) {
+        try {
+            // Load MySQL JDBC driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Could not load SQL driver");
+            System.exit(-1);  // Exit if driver is not found
+        }
+
+
+        int retries = 10;  // Number of retry attempts
+        boolean shouldWait = false;  // Flag to wait before next retry
+        for (int i = 0; i < retries; ++i) {
+            System.out.println("Connecting to database...");
+
+            try {
+                if (shouldWait) {
+                    // Wait before retrying (if needed)
+                    Thread.sleep(delay);
+                }
+
+                // Build the connection URL dynamically with the location parameter (e.g., "localhost:33060")
+                String dbUrl = "jdbc:mysql://" + location + "/world?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
+
+                // Connect to database using the dynamically constructed URL
+                con = DriverManager.getConnection(dbUrl, "root", "root");
+
+                System.out.println("Successfully connected to the database.");
+                break;  // Exit loop if connected successfully
+            } catch (SQLException sqle) {
+                System.out.println("Failed to connect to database (attempt " + (i + 1) + ")");
+                System.out.println(sqle.getMessage());
+
+                // Set flag to wait before the next retry attempt
+                shouldWait = true;
+            } catch (InterruptedException ie) {
+                System.out.println("Thread interrupted unexpectedly.");
+            }
+        }
+
+        if (con == null) {
+            System.out.println("Unable to connect to the database after " + retries + " attempts.");
+            System.exit(-1);  // Exit if the connection is unsuccessful
+        }
+    }
+
+
+    /*
+    ========================================
+    Main method to run the application
+    ========================================
+     */
+
     public static void main(String[] args) {
         App app = new App(); // Create an instance of App
+
+        // Default to localhost:33060 if no arguments are provided
+        String dbLocation = (args.length < 1) ? "localhost:33060" : args[0];
+        int delay = (args.length < 2) ? 10000 : Integer.parseInt(args[1]);
+
+        // Connect to the database with retry and delay
+        app.connect(dbLocation, delay);
+
 
         // Print a welcoming message
         System.out.println("Welcome to the Country Reports Application!\n");
@@ -551,18 +614,10 @@ public class App {
     */
 
     // Private method to execute SQL queries
+
+    // Private method to execute SQL queries using the persistent connection
     private void executeQuery(String query, StringBuilder report, String... params) {
-        try {
-            // Load the MySQL JDBC driver
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            System.err.println("Could not load SQL driver: " + e.getMessage()); // Handle driver loading error
-            return; // Exit method if driver fails to load
-        }
-
-        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
-             PreparedStatement pstmt = conn.prepareStatement(query)) { // Prepare SQL statement
-
+        try (PreparedStatement pstmt = con.prepareStatement(query)) {  // Use the persistent connection
             // Set parameters for prepared statement if any
             if (params != null) {
                 for (int i = 0; i < params.length; i++) {
@@ -583,9 +638,10 @@ public class App {
                 }
                 report.append("\n"); // Add newline after each row
             }
-
         } catch (SQLException e) {
             System.err.println("SQL Exception: " + e.getMessage()); // Handle SQL errors
         }
     }
 }
+
+
