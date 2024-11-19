@@ -20,6 +20,7 @@ public class App {
             System.exit(-1);  // Exit if driver is not found
         }
 
+
         int retries = 10;  // Number of retry attempts
         boolean shouldWait = false;  // Flag to wait before next retry
         for (int i = 0; i < retries; ++i) {
