@@ -1,4 +1,4 @@
 FROM openjdk:latest
-COPY ./target/IAAACoursework-0.1.0.2-jar-with-dependencies.jar /tmp
+COPY ./target/iaaa.jar /tmp
 WORKDIR /tmp
-ENTRYPOINT ["java", "-jar", "IAAACoursework-0.1.0.2-jar-with-dependencies.jar"]
+ENTRYPOINT ["java", "-jar", "iaaa.jar", "db:3306", "10000"]
