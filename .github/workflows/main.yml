@@ -4,7 +4,7 @@ on:
     branches:
       - master
       - develop
-
+      - Code_Coverage
 jobs:
   UnitTests:
     name: Unit Tests
@@ -21,6 +21,13 @@ jobs:
           distribution: 'adopt'
       - name: Unit Tests
         run: mvn -Dtest=com.napier.iaaa.AppTest test
+      - name: CodeCov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }} # now required for public repos
+          directory: ./target/site/jacoco
+          flags: Unit Tests # optional
+          verbose: true # optional (default = false)
 
   IntegrationTests:
     name: Integration Tests
@@ -44,15 +51,14 @@ jobs:
           docker rm world
           docker image rm database
       - name: CodeCov
-        uses: codecov/codecov-action@v4.0.1
+        uses: codecov/codecov-action@v2
         with:
-          token: ${{ secrets.CODECOV_TOKEN }} # now required for public repos too
+          token: ${{ secrets.CODECOV_TOKEN }} # now required for public repos
           directory: ./target/site/jacoco
           flags: Integration Tests # optional
           verbose: true # optional (default = false)
-          slug: ismail5626/iaaa
   build:
-    name: Build and Start Using docker compose
+    name: Build Run in Docker and Deploy Release
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
@@ -68,3 +74,10 @@ jobs:
         run: |
           mvn package -DskipTests
           docker compose up --abort-on-container-exit
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          automatic_release_tag: "latest"
+          files: |
+            ./target/*.jar
