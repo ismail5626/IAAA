@@ -5,11 +5,17 @@ import java.sql.*;
 public class App {
 
     /*
+    ========================================================================================
     Declare the persistent connection variable
+    ========================================================================================
      */
     private Connection con;
 
-    // Method to close the database connection
+    /*
+    ========================================================================================
+     Method to close the database connection
+    ========================================================================================
+     */
     public void closeConnection() {
         if (con != null) {
             try {
@@ -21,7 +27,11 @@ public class App {
         }
     }
 
-    // Method to establish a connection to the database with retries
+    /*
+    ========================================================================================
+     Method to establish a connection to the database with retries
+    ========================================================================================
+     */
     public void connect(String location, int delay) {
         try {
             // Load MySQL JDBC driver
