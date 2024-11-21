@@ -1,7 +1,7 @@
 *IAAA*:
 - Ismail 
 - Armaan 
-- Abdul_Manan 
+- Abdul Manan 
 - Abdullah
 
 
