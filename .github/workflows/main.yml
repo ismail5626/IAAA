@@ -26,7 +26,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }} # now required for public repos
           directory: ./target/site/jacoco
           flags: Unit Tests # optional
-          verbose: true # optional (default = false)
+          verbose: true # optional (default = false) hi
           slug: ismail5626/IAAA
 
   IntegrationTests:
