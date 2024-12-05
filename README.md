@@ -11,7 +11,7 @@
 * Master Build Status ![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/ismail5626/iaaa/main.yml?branch=master)
 * Develop Branch Status ![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/ismail5626/iaaa/main.yml?branch=develop)
 * License [![LICENSE](https://img.shields.io/github/license/ismail5626/iaaa.svg?style=flat-square)](https://github.com/ismail5626/iaaa/blob/master/LICENSE)
-* Code Coverage [![codecov](https://codecov.io/github/ismail5626/IAAA/branch/develop/graph/badge.svg?token=G6VRSNOJP4)](https://codecov.io/github/ismail5626/IAAA)
+* Code Coverage [![codecov](https://codecov.io/github/ismail5626/IAAA/graph/badge.svg?token=G6VRSNOJP4)](https://codecov.io/github/ismail5626/IAAA)
 * Release [![Releases](https://img.shields.io/github/release/ismail5626/iaaa/all.svg?style=flat-square)](https://github.com/ismail5626/iaaa/releases)
 
 
