@@ -27,6 +27,7 @@ jobs:
           directory: ./target/site/jacoco
           flags: Unit Tests # optional
           verbose: true # optional (default = false)
+          slug: ismail5626/IAAA
 
   IntegrationTests:
     name: Integration Tests
@@ -56,6 +57,7 @@ jobs:
           directory: ./target/site/jacoco
           flags: Integration Tests # optional
           verbose: true # optional (default = false)
+          slug: ismail5626/IAAA
   build:
     name: Build Run in Docker and Deploy Release
     runs-on: ubuntu-20.04
