@@ -3,18 +3,12 @@ package com.napier.iaaa;
 import java.sql.*;
 
 public class App {
-
-    /*
-    ========================================================================================
-    Declare the persistent connection variable
-    ========================================================================================
-     */
+    // Declare the persistent connection variable
     private Connection con;
 
-    /*
-    ========================================================================================
-     Method to close the database connection
-    ========================================================================================
+    /**
+    /**
+     * Closes the persistent database connection if it is open.
      */
     public void closeConnection() {
         if (con != null) {
@@ -27,10 +21,12 @@ public class App {
         }
     }
 
-    /*
-    ========================================================================================
-     Method to establish a connection to the database with retries
-    ========================================================================================
+    /**
+     * Establishes a connection to the database with a specified number of retry attempts
+     * and a delay between retries.
+     *
+     * @param location the location of the database (e.g., "localhost:33060")
+     * @param delay    the delay in milliseconds between retry attempts
      */
     public void connect(String location, int delay) {
         try {
@@ -40,7 +36,6 @@ public class App {
             System.out.println("Could not load SQL driver");
             System.exit(-1);  // Exit if driver is not found
         }
-
 
         int retries = 10;  // Number of retry attempts
         boolean shouldWait = false;  // Flag to wait before next retry
@@ -78,13 +73,14 @@ public class App {
         }
     }
 
-
-    /*
-    ========================================
-    Main method to run the application
-    ========================================
+    /**
+     * Main method to run the application.
+     * Connects to the database and initiates the report generation process.
+     *
+     * @param args command-line arguments:
+     *             the first argument specifies the database location,
+     *             the second argument specifies the retry delay in milliseconds.
      */
-
     public static void main(String[] args) {
         App app = new App(); // Create an instance of App
 
@@ -95,14 +91,14 @@ public class App {
         // Connect to the database with retry and delay
         app.connect(dbLocation, delay);
 
-
         // Print a welcoming message
         System.out.println("Welcome to the Country Reports Application!\n");
 
         // Inform user that reports are being generated
         System.out.println("Generating reports...\n");
 
-        // Generate and print each report, with spacing between for readability
+
+// Generate and print each report, with spacing between for readability
         System.out.println(app.getAllCountriesByPopulation()); // Report 1: Countries in the world by population
         System.out.println(); // Spacing between reports
 
@@ -214,7 +210,12 @@ public class App {
 //     - Capital: Capital city of the country
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    // Method to get all countries ordered by population (largest to smallest)
+    /**
+     * Retrieves all countries ordered by population in descending order (largest to smallest).
+     *
+     * @return a string report containing the country details including code, name, continent,
+     *         region, population, and capital, ordered by population.
+     */
     public String getAllCountriesByPopulation() {
         StringBuilder report = new StringBuilder(); // Initialize report
         report.append("=== All Countries by Largest Population to Smallest ===\n");
@@ -223,7 +224,13 @@ public class App {
         return report.toString(); // Return the generated report as a string
     }
 
-    // Method to get countries within a specified continent ordered by population (largest to smallest)
+    /**
+     * Retrieves countries within a specified continent ordered by population in descending order (largest to smallest).
+     *
+     * @param continent the name of the continent for which the countries should be retrieved
+     * @return a string report containing the country details including code, name, continent,
+     *         region, population, and capital, ordered by population within the specified continent
+     */
     public String getCountriesByContinent(String continent) {
         StringBuilder report = new StringBuilder(); // Initialize report
         report.append("=== Countries in Continent: ").append(continent).append(" ===\n");
@@ -232,7 +239,14 @@ public class App {
         return report.toString(); // Return the generated report
     }
 
-    // Method to get countries within a specified region ordered by population (largest to smallest)
+
+    /**
+     * Retrieves countries within a specified region ordered by population in descending order (largest to smallest).
+     *
+     * @param region the name of the region for which the countries should be retrieved
+     * @return a string report containing the country details including code, name, continent,
+     *         region, population, and capital, ordered by population within the specified region
+     */
     public String getCountriesByRegion(String region) {
         StringBuilder report = new StringBuilder(); // Initialize report
         report.append("=== Countries in Region: ").append(region).append(" ===\n");
@@ -241,7 +255,13 @@ public class App {
         return report.toString(); // Return the generated report
     }
 
-    // Method to get the top N most populated countries
+    /**
+     * Retrieves the top N most populated countries globally.
+     *
+     * @param N the number of top populated countries to retrieve
+     * @return a string report containing the top N country details including code, name, continent,
+     *         region, population, and capital, ordered by population
+     */
     public String getTopNPopulatedCountries(int N) {
         StringBuilder report = new StringBuilder(); // Initialize report
         report.append("=== Top ").append(N).append(" Populated Countries ===\n");
@@ -250,7 +270,14 @@ public class App {
         return report.toString(); // Return the generated report
     }
 
-    // Method to get the top N most populated countries in a specified continent
+    /**
+     * Retrieves the top N most populated countries in a specified continent.
+     *
+     * @param continent the name of the continent for which the top N populated countries should be retrieved
+     * @param N the number of top populated countries to retrieve within the specified continent
+     * @return a string report containing the top N country details including code, name, continent,
+     *         region, population, and capital, ordered by population
+     */
     public String getTopNPopulatedCountriesInContinent(String continent, int N) {
         StringBuilder report = new StringBuilder(); // Initialize report
         report.append("=== Top ").append(N).append(" Populated Countries in Continent: ").append(continent).append(" ===\n");
@@ -259,7 +286,14 @@ public class App {
         return report.toString(); // Return the generated report
     }
 
-    // Method to get the top N most populated countries in a specified region
+    /**
+     * Retrieves the top N most populated countries in a specified region.
+     *
+     * @param region the name of the region for which the top N populated countries should be retrieved
+     * @param N the number of top populated countries to retrieve within the specified region
+     * @return a string report containing the top N country details including code, name, continent,
+     *         region, population, and capital, ordered by population
+     */
     public String getTopNPopulatedCountriesInRegion(String region, int N) {
         StringBuilder report = new StringBuilder(); // Initialize report
         report.append("=== Top ").append(N).append(" Populated Countries in Region: ").append(region).append(" ===\n");
@@ -268,7 +302,12 @@ public class App {
         return report.toString(); // Return the generated report
     }
 
-    // Method to get all cities ordered by population (largest to smallest)
+    /**
+     * Retrieves all cities ordered by population in descending order (largest to smallest).
+     *
+     * @return a string report containing the city details including name, country code, district,
+     *         and population, ordered by population
+     */
     public String getAllCitiesByPopulation() {
         StringBuilder report = new StringBuilder(); // Initialize report
         report.append("=== All Cities by Largest Population to Smallest ===\n");
@@ -289,7 +328,12 @@ public class App {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
-    // Method to get cities within a specified continent, ordered by population (largest to smallest)
+    /**
+     * Retrieves cities within a specified continent, ordered by population in descending order (largest to smallest).
+     *
+     * @param continent the name of the continent for which the cities should be retrieved
+     * @return a string report containing city details including name, country code, district, and population
+     */
     public String getCitiesByContinent(String continent) {
         StringBuilder report = new StringBuilder();
         report.append("=== Cities in Continent: ").append(continent).append(" ===\n");
@@ -298,11 +342,16 @@ public class App {
                 "JOIN country ON city.CountryCode = country.code " +
                 "WHERE country.continent = ? " +
                 "ORDER BY city.Population DESC";
-        executeQuery(query, report, continent); // Execute query with continent parameter
-        return report.toString(); // Return the generated report
+        executeQuery(query, report, continent);
+        return report.toString();
     }
 
-    // Method to get cities within a specified region, ordered by population (largest to smallest)
+    /**
+     * Retrieves cities within a specified region, ordered by population in descending order (largest to smallest).
+     *
+     * @param region the name of the region for which the cities should be retrieved
+     * @return a string report containing city details including name, country, district, and population
+     */
     public String getCitiesByRegion(String region) {
         StringBuilder report = new StringBuilder();
         report.append("=== All Cities in Region: ").append(region).append(" by Largest Population to Smallest ===\n");
@@ -311,11 +360,16 @@ public class App {
                 "JOIN country ON city.CountryCode = country.Code " +
                 "WHERE country.Region = ? " +
                 "ORDER BY city.Population DESC";
-        executeQuery(query, report, region); // Execute query with region parameter
-        return report.toString(); // Return the generated report
+        executeQuery(query, report, region);
+        return report.toString();
     }
 
-    // Method to get cities within a specified country, ordered by population (largest to smallest)
+    /**
+     * Retrieves cities within a specified country, ordered by population in descending order (largest to smallest).
+     *
+     * @param country the name of the country for which the cities should be retrieved
+     * @return a string report containing city details including name, district, and population
+     */
     public String getCitiesByCountry(String country) {
         StringBuilder report = new StringBuilder();
         report.append("=== All Cities in Country: ").append(country).append(" by Largest Population to Smallest ===\n");
@@ -324,29 +378,45 @@ public class App {
                 "JOIN country ON city.CountryCode = country.Code " +
                 "WHERE country.Name = ? " +
                 "ORDER BY city.Population DESC";
-        executeQuery(query, report, country); // Execute query with country parameter
-        return report.toString(); // Return the generated report
+        executeQuery(query, report, country);
+        return report.toString();
     }
 
-    // Method to get cities within a specified district, ordered by population (largest to smallest)
+    /**
+     * Retrieves cities within a specified district, ordered by population in descending order (largest to smallest).
+     *
+     * @param district the name of the district for which the cities should be retrieved
+     * @return a string report containing city details including name and population
+     */
     public String getCitiesByDistrict(String district) {
         StringBuilder report = new StringBuilder();
         report.append("=== All Cities in District: ").append(district).append(" by Largest Population to Smallest ===\n");
         String query = "SELECT Name, Population FROM city WHERE District = ? ORDER BY Population DESC";
-        executeQuery(query, report, district); // Execute query with district parameter
-        return report.toString(); // Return the generated report
+        executeQuery(query, report, district);
+        return report.toString();
     }
 
-    // Method to get the top N most populated cities in the world
+    /**
+     * Retrieves the top N most populated cities in the world.
+     *
+     * @param N the number of top populated cities to retrieve
+     * @return a string report containing city details including name, country code, district, and population
+     */
     public String getTopNPopulatedCities(int N) {
         StringBuilder report = new StringBuilder();
         report.append("=== Top ").append(N).append(" Populated Cities in the World ===\n");
         String query = "SELECT Name, CountryCode, District, Population FROM city ORDER BY Population DESC LIMIT " + N;
-        executeQuery(query, report); // Execute query to limit results to top N cities globally
-        return report.toString(); // Return the generated report
+        executeQuery(query, report);
+        return report.toString();
     }
 
-    // Method to get the top N most populated cities within a specified continent
+    /**
+     * Retrieves the top N most populated cities within a specified continent.
+     *
+     * @param continent the name of the continent for which the top N populated cities should be retrieved
+     * @param N the number of top populated cities to retrieve within the specified continent
+     * @return a string report containing city details including name, country, district, and population
+     */
     public String getTopNPopulatedCitiesInContinent(String continent, int N) {
         StringBuilder report = new StringBuilder();
         report.append("=== Top ").append(N).append(" Populated Cities in Continent: ").append(continent).append(" ===\n");
@@ -355,11 +425,17 @@ public class App {
                 "JOIN country ON city.CountryCode = country.Code " +
                 "WHERE country.Continent = ? " +
                 "ORDER BY city.Population DESC LIMIT " + N;
-        executeQuery(query, report, continent); // Execute query with continent parameter
-        return report.toString(); // Return the generated report
+        executeQuery(query, report, continent);
+        return report.toString();
     }
 
-    // Method to get the top N most populated cities within a specified region
+    /**
+     * Retrieves the top N most populated cities within a specified region.
+     *
+     * @param region the name of the region for which the top N populated cities should be retrieved
+     * @param N the number of top populated cities to retrieve within the specified region
+     * @return a string report containing city details including name, country, district, and population
+     */
     public String getTopNPopulatedCitiesInRegion(String region, int N) {
         StringBuilder report = new StringBuilder();
         report.append("=== Top ").append(N).append(" Populated Cities in Region: ").append(region).append(" ===\n");
@@ -368,11 +444,17 @@ public class App {
                 "JOIN country ON city.CountryCode = country.Code " +
                 "WHERE country.Region = ? " +
                 "ORDER BY city.Population DESC LIMIT " + N;
-        executeQuery(query, report, region); // Execute query with region parameter
-        return report.toString(); // Return the generated report
+        executeQuery(query, report, region);
+        return report.toString();
     }
 
-    // Method to get the top N most populated cities within a specified country
+    /**
+     * Retrieves the top N most populated cities within a specified country.
+     *
+     * @param country the name of the country for which the top N populated cities should be retrieved
+     * @param N the number of top populated cities to retrieve within the specified country
+     * @return a string report containing city details including name, district, and population
+     */
     public String getTopNPopulatedCitiesInCountry(String country, int N) {
         StringBuilder report = new StringBuilder();
         report.append("=== Top ").append(N).append(" Populated Cities in Country: ").append(country).append(" ===\n");
@@ -381,17 +463,23 @@ public class App {
                 "JOIN country ON city.CountryCode = country.Code " +
                 "WHERE country.Name = ? " +
                 "ORDER BY city.Population DESC LIMIT " + N;
-        executeQuery(query, report, country); // Execute query with country parameter
-        return report.toString(); // Return the generated report
+        executeQuery(query, report, country);
+        return report.toString();
     }
 
-    // Method to get the top N most populated cities within a specified district
+    /**
+     * Retrieves the top N most populated cities within a specified district.
+     *
+     * @param district the name of the district for which the top N populated cities should be retrieved
+     * @param N the number of top populated cities to retrieve within the specified district
+     * @return a string report containing city details including name and population
+     */
     public String getTopNPopulatedCitiesInDistrict(String district, int N) {
         StringBuilder report = new StringBuilder();
         report.append("=== Top ").append(N).append(" Populated Cities in District: ").append(district).append(" ===\n");
         String query = "SELECT Name, Population FROM city WHERE District = ? ORDER BY Population DESC LIMIT " + N;
-        executeQuery(query, report, district); // Execute query with district parameter
-        return report.toString(); // Return the generated report
+        executeQuery(query, report, district);
+        return report.toString();
     }
 
 
@@ -406,7 +494,11 @@ public class App {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
-    // Method to get all capital cities in the world, ordered by population (largest to smallest)
+    /**
+     * Retrieves all capital cities in the world, ordered by population in descending order (largest to smallest).
+     *
+     * @return a string report containing capital city details including name, country, and population
+     */
     public String getAllCapitalCitiesByPopulation() {
         StringBuilder report = new StringBuilder(); // Initialize report
         report.append("=== All Capital Cities in the World by Largest Population to Smallest ===\n");
@@ -418,7 +510,12 @@ public class App {
         return report.toString(); // Return the generated report
     }
 
-    // Method to get capital cities in a specified continent, ordered by population (largest to smallest)
+    /**
+     * Retrieves capital cities in a specified continent, ordered by population in descending order (largest to smallest).
+     *
+     * @param continent the name of the continent for which the capital cities should be retrieved
+     * @return a string report containing capital city details including name, country, and population
+     */
     public String getCapitalCitiesByContinent(String continent) {
         StringBuilder report = new StringBuilder(); // Initialize report
         report.append("=== Capital Cities in Continent: ").append(continent).append(" by Largest Population to Smallest ===\n");
@@ -431,7 +528,12 @@ public class App {
         return report.toString(); // Return the generated report
     }
 
-    // Method to get capital cities in a specified region, ordered by population (largest to smallest)
+    /**
+     * Retrieves capital cities in a specified region, ordered by population in descending order (largest to smallest).
+     *
+     * @param region the name of the region for which the capital cities should be retrieved
+     * @return a string report containing capital city details including name, country, and population
+     */
     public String getCapitalCitiesByRegion(String region) {
         StringBuilder report = new StringBuilder(); // Initialize report
         report.append("=== Capital Cities in Region: ").append(region).append(" by Largest Population to Smallest ===\n");
@@ -444,7 +546,12 @@ public class App {
         return report.toString(); // Return the generated report
     }
 
-    // Method to get the top N most populated capital cities in the world
+    /**
+     * Retrieves the top N most populated capital cities in the world.
+     *
+     * @param N the number of top populated capital cities to retrieve
+     * @return a string report containing capital city details including name, country, and population
+     */
     public String getTopNPopulatedCapitalCities(int N) {
         StringBuilder report = new StringBuilder(); // Initialize report
         report.append("=== Top ").append(N).append(" Populated Capital Cities in the World ===\n");
@@ -456,7 +563,13 @@ public class App {
         return report.toString(); // Return the generated report
     }
 
-    // Method to get the top N most populated capital cities in a specified continent
+    /**
+     * Retrieves the top N most populated capital cities in a specified continent.
+     *
+     * @param continent the name of the continent for which the top N populated capital cities should be retrieved
+     * @param N the number of top populated capital cities to retrieve within the specified continent
+     * @return a string report containing capital city details including name, country, and population
+     */
     public String getTopNPopulatedCapitalCitiesInContinent(String continent, int N) {
         StringBuilder report = new StringBuilder(); // Initialize report
         report.append("=== Top ").append(N).append(" Populated Capital Cities in Continent: ").append(continent).append(" ===\n");
@@ -469,7 +582,13 @@ public class App {
         return report.toString(); // Return the generated report
     }
 
-    // Method to get the top N most populated capital cities in a specified region
+    /**
+     * Retrieves the top N most populated capital cities in a specified region.
+     *
+     * @param region the name of the region for which the top N populated capital cities should be retrieved
+     * @param N the number of top populated capital cities to retrieve within the specified region
+     * @return a string report containing capital city details including name, country, and population
+     */
     public String getTopNPopulatedCapitalCitiesInRegion(String region, int N) {
         StringBuilder report = new StringBuilder(); // Initialize report
         report.append("=== Top ").append(N).append(" Populated Capital Cities in Region: ").append(region).append(" ===\n");
@@ -481,6 +600,7 @@ public class App {
         executeQuery(query, report, region); // Execute query with region parameter and limit to top N results
         return report.toString(); // Return the generated report
     }
+
 
 
        /*
@@ -495,8 +615,12 @@ public class App {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
-    // Method to get a population report for a specific continent, including total population, population in cities,
-// population not in cities, and percentage of population in and outside cities
+    /**
+     * Generates a population report for each continent, including total population, population in cities,
+     * population not in cities, and percentages of populations in and outside cities.
+     *
+     * @return a string report containing population details for each continent
+     */
     public String getContinentPopulationReports() {
         StringBuilder report = new StringBuilder();
         report.append("=== Population Report by Continent ===\n");
@@ -511,8 +635,12 @@ public class App {
         return report.toString();
     }
 
-    // Method to get a population report for a specific region, including total population, population in cities,
-// population not in cities, and percentage of population in and outside cities
+    /**
+     * Generates a population report for each region, including total population, population in cities,
+     * population not in cities, and percentages of populations in and outside cities.
+     *
+     * @return a string report containing population details for each region
+     */
     public String getRegionPopulationReports() {
         StringBuilder report = new StringBuilder();
         report.append("=== Population Report by Region ===\n");
@@ -527,8 +655,12 @@ public class App {
         return report.toString();
     }
 
-    // Method to get a population report for a specific country, including total population, population in cities,
-// population not in cities, and percentage of population in and outside cities
+    /**
+     * Generates a population report for each country, including total population, population in cities,
+     * population not in cities, and percentages of populations in and outside cities.
+     *
+     * @return a string report containing population details for each country
+     */
     public String getCountryPopulationReports() {
         StringBuilder report = new StringBuilder();
         report.append("=== Population Report by Country ===\n");
@@ -543,63 +675,97 @@ public class App {
         return report.toString();
     }
 
-    // Method to get the total world population
+    /**
+     * Retrieves the total world population.
+     *
+     * @return a string report containing the total world population
+     */
     public String getWorldPopulation() {
-        StringBuilder report = new StringBuilder(); // Initialize report
+        StringBuilder report = new StringBuilder();
         report.append("=== World Population Report ===\n");
         String query = "SELECT SUM(Population) AS WorldPopulation FROM country";
-        executeQuery(query, report); // Execute query without parameters
-        return report.toString(); // Return the generated report
+        executeQuery(query, report);
+        return report.toString();
     }
 
-    // Method to get the total population of a specific continent
+    /**
+     * Retrieves the total population of a specific continent.
+     *
+     * @param continent the name of the continent
+     * @return a string report containing the total population of the specified continent
+     */
     public String getContinentPopulation(String continent) {
-        StringBuilder report = new StringBuilder(); // Initialize report
+        StringBuilder report = new StringBuilder();
         report.append("=== Population Report for Continent: ").append(continent).append(" ===\n");
         String query = "SELECT SUM(Population) AS ContinentPopulation FROM country WHERE Continent = ?";
-        executeQuery(query, report, continent); // Execute query with continent parameter
-        return report.toString(); // Return the generated report
+        executeQuery(query, report, continent);
+        return report.toString();
     }
 
-    // Method to get the total population of a specific region
+    /**
+     * Retrieves the total population of a specific region.
+     *
+     * @param region the name of the region
+     * @return a string report containing the total population of the specified region
+     */
     public String getRegionPopulation(String region) {
-        StringBuilder report = new StringBuilder(); // Initialize report
+        StringBuilder report = new StringBuilder();
         report.append("=== Population Report for Region: ").append(region).append(" ===\n");
         String query = "SELECT SUM(Population) AS RegionPopulation FROM country WHERE Region = ?";
-        executeQuery(query, report, region); // Execute query with region parameter
-        return report.toString(); // Return the generated report
+        executeQuery(query, report, region);
+        return report.toString();
     }
 
-    // Method to get the total population of a specific country
+    /**
+     * Retrieves the total population of a specific country.
+     *
+     * @param country the name of the country
+     * @return a string report containing the total population of the specified country
+     */
     public String getCountryPopulation(String country) {
-        StringBuilder report = new StringBuilder(); // Initialize report
+        StringBuilder report = new StringBuilder();
         report.append("=== Population Report for Country: ").append(country).append(" ===\n");
         String query = "SELECT Population AS CountryPopulation FROM country WHERE Name = ?";
-        executeQuery(query, report, country); // Execute query with country parameter
-        return report.toString(); // Return the generated report
+        executeQuery(query, report, country);
+        return report.toString();
     }
 
-    // Method to get the total population of a specific district
+    /**
+     * Retrieves the total population of a specific district.
+     *
+     * @param district the name of the district
+     * @return a string report containing the total population of the specified district
+     */
     public String getDistrictPopulation(String district) {
-        StringBuilder report = new StringBuilder(); // Initialize report
+        StringBuilder report = new StringBuilder();
         report.append("=== Population Report for District: ").append(district).append(" ===\n");
         String query = "SELECT SUM(Population) AS DistrictPopulation FROM city WHERE District = ?";
-        executeQuery(query, report, district); // Execute query with district parameter
-        return report.toString(); // Return the generated report
+        executeQuery(query, report, district);
+        return report.toString();
     }
 
-    // Method to get the population of a specific city
+    /**
+     * Retrieves the population of a specific city.
+     *
+     * @param city the name of the city
+     * @return a string report containing the population of the specified city
+     */
     public String getCityPopulation(String city) {
-        StringBuilder report = new StringBuilder(); // Initialize report
+        StringBuilder report = new StringBuilder();
         report.append("=== Population Report for City: ").append(city).append(" ===\n");
         String query = "SELECT Population AS CityPopulation FROM city WHERE Name = ?";
-        executeQuery(query, report, city); // Execute query with city parameter
-        return report.toString(); // Return the generated report
+        executeQuery(query, report, city);
+        return report.toString();
     }
 
-    // Method to generate a report on speakers of specific languages, ordered by the total number of speakers
+    /**
+     * Generates a report on the speakers of specific languages, ordered by the total number of speakers.
+     * The report includes the total speakers and the percentage of the world population for each language.
+     *
+     * @return a string report containing language speaker statistics
+     */
     public String getLanguageSpeakersReport() {
-        StringBuilder report = new StringBuilder(); // Initialize report
+        StringBuilder report = new StringBuilder();
         report.append("=== Language Speakers Report ===\n");
         String query = "SELECT language.Language, " +
                 "SUM(country.Population * language.Percentage / 100) AS Speakers, " +
@@ -609,9 +775,10 @@ public class App {
                 "WHERE language.Language IN ('Chinese', 'English', 'Hindi', 'Spanish', 'Arabic') " +
                 "GROUP BY language.Language " +
                 "ORDER BY Speakers DESC";
-        executeQuery(query, report); // Execute query without parameters
-        return report.toString(); // Return the generated report
+        executeQuery(query, report);
+        return report.toString();
     }
+
 
 
          /*
@@ -622,9 +789,14 @@ public class App {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
-    // Private method to execute SQL queries
-
-    // Private method to execute SQL queries using the persistent connection
+    /**
+     * Executes an SQL query using the persistent database connection and appends the results to a report.
+     * Supports parameterized queries for enhanced security.
+     *
+     * @param query  the SQL query to execute
+     * @param report the {@code StringBuilder} to append the query results
+     * @param params optional parameters for the query; used to set values in a prepared statement
+     */
     private void executeQuery(String query, StringBuilder report, String... params) {
         try (PreparedStatement pstmt = con.prepareStatement(query)) {  // Use the persistent connection
             // Set parameters for prepared statement if any
@@ -650,7 +822,7 @@ public class App {
         } catch (SQLException e) {
             System.err.println("SQL Exception: " + e.getMessage()); // Handle SQL errors
         }
-    }
-}
+    }}
+
 
 
