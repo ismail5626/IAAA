@@ -1,115 +1,79 @@
-name: Build, Test, and Upload Coverage
-
+name: iaaaactions
 on:
   push:
-    branches:
-      - master
-  pull_request:
     branches:
       - master
 
 jobs:
   UnitTests:
-    name: Run Unit Tests and Upload Coverage
+    name: Unit Tests
     runs-on: ubuntu-20.04
-
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v2
-
+        with:
+          submodules: recursive
       - name: Set up JDK 11
         uses: actions/setup-java@v2
         with:
           java-version: '11'
           distribution: 'adopt'
-
-      - name: Cache Maven dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-
-      - name: Run Unit Tests
-        run: mvn clean verify -Dtest=com.napier.iaaa.AppTest
-
-      - name: Upload Coverage to Codecov
+      - name: Unit Tests
+        run: mvn -Dtest=com.napier.iaaa.AppTest test
+      - name: CodeCov
         uses: codecov/codecov-action@v2
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: target/site/jacoco/jacoco.xml
-          flags: UnitTests
-          verbose: true
+          token: ${{ secrets.CODECOV_TOKEN }} # now required for public repos
+          directory: ./target/site/jacoco
+          flags: Unit Tests # optional
+          verbose: true # optional (default = false)
 
   IntegrationTests:
-    name: Run Integration Tests and Upload Coverage
+    name: Integration Tests
     runs-on: ubuntu-20.04
-
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v2
-
+        with:
+          submodules: recursive
       - name: Set up JDK 11
         uses: actions/setup-java@v2
         with:
           java-version: '11'
           distribution: 'adopt'
-
-      - name: Cache Maven dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-
-      - name: Run Database and Integration Tests
+      - name: Integration Tests and CodeCov
         run: |
-          docker build -t database ./db
+          docker build -t database ./db 
           docker run --name world -dp 33060:3306 database
-          mvn verify -Dtest=com.napier.iaaa.AppIntegrationTest
+          mvn -Dtest=com.napier.iaaa.AppIntegrationTest test          
           docker stop world
           docker rm world
-
-      - name: Upload Coverage to Codecov
+          docker image rm database
+      - name: CodeCov
         uses: codecov/codecov-action@v2
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: target/site/jacoco/jacoco.xml
-          flags: IntegrationTests
-          verbose: true
-
+          token: ${{ secrets.CODECOV_TOKEN }} # now required for public repos
+          directory: ./target/site/jacoco
+          flags: Integration Tests # optional
+          verbose: true # optional (default = false)
   build:
-    name: Build and Deploy Release
+    name: Build Run in Docker and Deploy Release
     runs-on: ubuntu-20.04
-
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v2
-
+        with:
+          submodules: recursive
       - name: Set up JDK 11
         uses: actions/setup-java@v2
         with:
           java-version: '11'
           distribution: 'adopt'
-
-      - name: Cache Maven dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-
-      - name: Package application
-        run: mvn clean package -DskipTests
-
-      - name: Run Docker Compose
-        run: docker-compose up --abort-on-container-exit
-
-      - name: Create GitHub Release
-        uses: marvinpinto/action-automatic-releases@latest
+      - name: Package and Run docker compose
+        run: |
+          mvn package -DskipTests
+          docker compose up --abort-on-container-exit
+      - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
