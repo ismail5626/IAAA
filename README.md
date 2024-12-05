@@ -23,7 +23,7 @@ All 32 have been implemented - 100%.
 
 | ID | Name                                                                                  | Met | Screenshot                                                                               |
 |----|---------------------------------------------------------------------------------------|-----|------------------------------------------------------------------------------------------|
-| 1  | All the countries in the world organized by largest population                        | Yes | ![Screenshot](https://github.com/ismail5626/IAAA/blob/evidence-branch/screenshots/1.png) |
+| 1  | All the countries in the world organized by largest population                        | Yes | ![Screenshot](screenshots/1.png) |
 | 2  | All the countries in a continent (e.g., Asia) organized by largest population         | Yes | ![Screenshot](https://github.com/ismail5626/IAAA/raw/evidence-branch/screenshots/2.png)  |
 | 3  | All the countries in a region (e.g., Middle East) organized by largest population     | Yes | ![Screenshot](https://github.com/ismail5626/IAAA/raw/evidence-branch/screenshots/3.png)  |
 | 4  | Top N populated countries globally                                                    | Yes | ![Screenshot](https://github.com/ismail5626/IAAA/raw/evidence-branch/screenshots/4.png)  |
