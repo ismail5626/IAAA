@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - develop
 
 jobs:
   UnitTests:
@@ -82,3 +83,4 @@ jobs:
           automatic_release_tag: "latest"
           files: |
             ./target/*.jar
+
